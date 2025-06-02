@@ -8,6 +8,7 @@ import { useAuth } from '@/context/AuthContext';
 import { supabase } from '@/integrations/supabase/client';
 import { Button } from '@/components/ui/button';
 import { useQuery } from '@tanstack/react-query';
+import ReactMarkdown from 'react-markdown';
 
 interface ChatResponse {
   response: string;
@@ -19,7 +20,6 @@ interface ChatResponse {
     drug2: string;
     description: string;
   };
-  error?: string;
 }
 
 export default function Chat() {
@@ -133,7 +133,7 @@ export default function Chat() {
     try {
       console.log('Sending chat request:', { message: userMessage });
 
-      const response = await fetch('http://localhost:8000/api/chat', {
+      const response = await fetch('http://localhost:8001/api/chat', {
         method: 'POST',
         headers: {
           'Content-Type': 'application/json',
@@ -146,67 +146,54 @@ export default function Chat() {
       }
 
       const data: ChatResponse = await response.json();
-      console.log('Full API Response:', data);  // Log the entire response
+      console.log('Full API Response:', data);
 
       if (data.error) {
         throw new Error(data.error);
       }
 
+      // Format the response message
+      const formattedResponse = data.response;
+
       // Add the assistant's response to the chat and history
       const assistantMessage = { 
         role: 'assistant' as const, 
-        content: data.response,
-        drugs: data.drugs
+        content: formattedResponse
       };
       setMessages(prev => [...prev, assistantMessage]);
       const storedAssistant = addChatMessage(sessionId, assistantMessage);
 
       // Store interaction if found
       if (data.interaction_found && data.interaction_details) {
-        const { drug1, drug2 } = data.interaction_details;
+        console.log('Storing interaction:', {
+          drug1: data.interaction_details.drug1,
+          drug2: data.interaction_details.drug2,
+          description: data.interaction_details.description
+        });
         
-        if (!drug1 || !drug2 || !data.summary) {
-          console.error('Missing required data:', { drug1, drug2, summary: data.summary });
-        } else {
-          console.log('Attempting to store interaction:', {
-            drug1,
-            drug2,
-            summary: data.summary
-          });
-          const stored = addInteraction(drug1, drug2, data.summary);
-          console.log('Store interaction result:', stored);
-          
-          // Update chat session title
-          const storedSessions = localStorage.getItem('chatSessions');
-          if (storedSessions) {
-            const sessions = JSON.parse(storedSessions);
-            const session = sessions.find((s: any) => s.id === sessionId);
-            if (session) {
-              session.title = `Chat about ${drug1} and ${drug2}`;
-              localStorage.setItem('chatSessions', JSON.stringify(sessions));
-            }
+        const stored = addInteraction(
+          data.interaction_details.drug1,
+          data.interaction_details.drug2,
+          data.interaction_details.description
+        );
+        
+        console.log('Interaction stored:', stored);
+        
+        // Update chat session title
+        const storedSessions = localStorage.getItem('chatSessions');
+        if (storedSessions) {
+          const sessions = JSON.parse(storedSessions);
+          const session = sessions.find((s: any) => s.id === sessionId);
+          if (session) {
+            session.title = `Chat about ${data.interaction_details.drug1} and ${data.interaction_details.drug2}`;
+            localStorage.setItem('chatSessions', JSON.stringify(sessions));
           }
         }
-      } else {
-        console.log('No valid interaction to store:', {
-          interaction_found: data.interaction_found,
-          has_drugs: data.drugs && data.drugs.length >= 2,
-          has_summary: !!data.summary
-        });
       }
     } catch (error) {
       console.error('Error in chat submission:', error);
       const errorMessage = error instanceof Error ? error.message : 'An error occurred while processing your request';
       setError(errorMessage);
-      
-      // Add error message to chat and history
-      const errorMessageObj = { 
-        role: 'assistant' as const, 
-        content: 'Sorry, there was an error processing your request. Please try again.' 
-      };
-      console.log('Adding error message:', { sessionId, message: errorMessageObj });
-      setMessages(prev => [...prev, errorMessageObj]);
-      addChatMessage(sessionId, errorMessageObj);
     } finally {
       setIsLoading(false);
     }
@@ -241,7 +228,15 @@ export default function Chat() {
                   : 'bg-muted'
               }`}
             >
-              {message.content}
+              {message.role === 'assistant' ? (
+                <div className="prose prose-sm dark:prose-invert max-w-none">
+                  <ReactMarkdown>
+                    {message.content}
+                  </ReactMarkdown>
+                </div>
+              ) : (
+                message.content
+              )}
             </div>
           </div>
         ))}
