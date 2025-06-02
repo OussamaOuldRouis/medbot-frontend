@@ -1,73 +1,201 @@
-# Welcome to your Lovable project
+# Drug Insight MedBot Pro - Frontend
 
-## Project info
+A modern, responsive web interface for the Drug Insight MedBot Pro system, built with React, TypeScript, and Tailwind CSS. This frontend provides an intuitive user interface for healthcare professionals to interact with the drug interaction analysis system.
 
-**URL**: https://lovable.dev/projects/61bfc1ac-03a9-4a43-8edb-1c52319e6dd7
+## Features
 
-## How can I edit this code?
+- Real-time chat interface for drug interaction queries
+- Markdown support for formatted medical responses
+- Dark/Light mode support
+- Responsive design for all device sizes
+- Professional medical UI/UX
+- Real-time typing indicators
+- Message history
+- Error handling and user feedback
+- Loading states and animations
 
-There are several ways of editing your application.
+## Tech Stack
 
-**Use Lovable**
+- React 18
+- TypeScript
+- Tailwind CSS
+- Vite
+- React Markdown
+- Shadcn/ui Components
+- Lucide Icons
 
-Simply visit the [Lovable Project](https://lovable.dev/projects/61bfc1ac-03a9-4a43-8edb-1c52319e6dd7) and start prompting.
+## Prerequisites
 
-Changes made via Lovable will be committed automatically to this repo.
+- Node.js 18.0 or higher
+- npm 9.0 or higher
+- Git
 
-**Use your preferred IDE**
+## Installation
 
-If you want to work locally using your own IDE, you can clone this repo and push changes. Pushed changes will also be reflected in Lovable.
+1. Clone the repository:
+```bash
+git clone [repository-url]
+cd drug-insight-medbot-pro
+```
 
-The only requirement is having Node.js & npm installed - [install with nvm](https://github.com/nvm-sh/nvm#installing-and-updating)
+2. Install dependencies:
+```bash
+npm install
+```
 
-Follow these steps:
+3. Install additional required packages:
+```bash
+npm install react-markdown
+npm install -D @tailwindcss/typography
+```
 
-```sh
-# Step 1: Clone the repository using the project's Git URL.
-git clone <YOUR_GIT_URL>
+## Configuration
 
-# Step 2: Navigate to the project directory.
-cd <YOUR_PROJECT_NAME>
+The frontend is configured to connect to the backend server at `http://localhost:8001`. You can modify this in the following files:
+- `src/lib/api.ts`: Update the API endpoint URL
+- `src/components/Chat.tsx`: Modify chat-related configurations
 
-# Step 3: Install the necessary dependencies.
-npm i
+## Development
 
-# Step 4: Start the development server with auto-reloading and an instant preview.
+1. Start the development server:
+```bash
 npm run dev
 ```
 
-**Edit a file directly in GitHub**
+2. The application will be available at `http://localhost:5173`
 
-- Navigate to the desired file(s).
-- Click the "Edit" button (pencil icon) at the top right of the file view.
-- Make your changes and commit the changes.
+## Building for Production
 
-**Use GitHub Codespaces**
+1. Create a production build:
+```bash
+npm run build
+```
 
-- Navigate to the main page of your repository.
-- Click on the "Code" button (green button) near the top right.
-- Select the "Codespaces" tab.
-- Click on "New codespace" to launch a new Codespace environment.
-- Edit files directly within the Codespace and commit and push your changes once you're done.
+2. Preview the production build:
+```bash
+npm run preview
+```
 
-## What technologies are used for this project?
+## Project Structure
 
-This project is built with:
+```
+drug-insight-medbot-pro/
+├── src/
+│   ├── components/     # React components
+│   ├── lib/           # Utility functions and API
+│   ├── styles/        # Global styles
+│   └── App.tsx        # Main application component
+├── public/            # Static assets
+├── index.html         # Entry HTML file
+└── package.json       # Project dependencies
+```
 
-- Vite
-- TypeScript
-- React
-- shadcn-ui
-- Tailwind CSS
+## Key Components
 
-## How can I deploy this project?
+- `Chat.tsx`: Main chat interface component
+- `Message.tsx`: Individual message component
+- `api.ts`: API integration with backend
+- `types.ts`: TypeScript type definitions
 
-Simply open [Lovable](https://lovable.dev/projects/61bfc1ac-03a9-4a43-8edb-1c52319e6dd7) and click on Share -> Publish.
+## Styling
 
-## Can I connect a custom domain to my Lovable project?
+The project uses Tailwind CSS for styling with the following features:
+- Custom color scheme
+- Dark mode support
+- Responsive design
+- Typography plugin for markdown content
+- Custom animations and transitions
 
-Yes, you can!
+## API Integration
 
-To connect a domain, navigate to Project > Settings > Domains and click Connect Domain.
+The frontend communicates with the backend through the following endpoints:
+- `POST /api/chat`: Send chat messages
+- `GET /api/test-connection`: Test backend connectivity
 
-Read more here: [Setting up a custom domain](https://docs.lovable.dev/tips-tricks/custom-domain#step-by-step-guide)
+## Error Handling
+
+The application includes comprehensive error handling for:
+- Network errors
+- API failures
+- Invalid responses
+- User input validation
+
+## Browser Support
+
+- Chrome (latest)
+- Firefox (latest)
+- Safari (latest)
+- Edge (latest)
+
+## Performance Optimization
+
+- Code splitting
+- Lazy loading
+- Optimized assets
+- Efficient state management
+
+## Contributing
+
+1. Fork the repository
+2. Create a feature branch
+3. Commit your changes
+4. Push to the branch
+5. Create a Pull Request
+
+## Development Guidelines
+
+- Follow TypeScript best practices
+- Use functional components with hooks
+- Implement proper error boundaries
+- Write meaningful commit messages
+- Keep components small and focused
+- Use proper type definitions
+
+## Testing
+
+1. Run unit tests:
+```bash
+npm test
+```
+
+2. Run end-to-end tests:
+```bash
+npm run test:e2e
+```
+
+## Deployment
+
+1. Build the application:
+```bash
+npm run build
+```
+
+2. Deploy the contents of the `dist` directory to your hosting service
+
+## Environment Variables
+
+Create a `.env` file in the root directory with the following variables:
+```
+VITE_API_URL=http://localhost:8001
+```
+
+## Troubleshooting
+
+Common issues and solutions:
+1. If the chat interface doesn't connect:
+   - Check if the backend server is running
+   - Verify the API URL configuration
+   - Check network connectivity
+
+2. If styles aren't loading:
+   - Clear browser cache
+   - Rebuild the application
+   - Check Tailwind configuration
+
+## License
+
+[Add your license information here]
+
+## Support
+
+For support, please [add contact information or support channels]
